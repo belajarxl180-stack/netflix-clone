@@ -11,31 +11,31 @@ export default async function Home() {
       <Navbar />
 
       {/* Hero Banner */}
-      <section className="relative h-[70vh] flex flex-col justify-center px-10 bg-cover bg-center bg-[url('/banner.jpg')]">
+      <section className="relative h-[50vh] md:h-[70vh] flex flex-col justify-center px-4 md:px-10 bg-cover bg-center bg-[url('/banner.jpg')]">
         {/* Overlay hitam gelap */}
         <div className="absolute inset-0 bg-black/50"></div>
 
         <div className="relative z-10">
-          <h2 className="text-5xl font-bold max-w-xl mb-5 drop-shadow-lg">
+          <h2 className="text-3xl md:text-5xl font-bold max-w-xl mb-3 md:mb-5 drop-shadow-lg">
             Unlimited Movies — Only for You 🍿
           </h2>
-          <p className="text-xl max-w-lg mb-8 drop-shadow-lg">
+          <p className="text-base md:text-xl max-w-lg mb-4 md:mb-8 drop-shadow-lg">
             Enjoy the most popular movies around the world.
           </p>
-          <button className="bg-red-600 px-6 py-3 text-xl rounded hover:bg-red-700 w-fit">
+          <button className="bg-red-600 px-4 md:px-6 py-2 md:py-3 text-base md:text-xl rounded hover:bg-red-700 w-fit">
             Watch Now
           </button>
         </div>
       </section>
 
       {/* Movies Section */}
-      <section className="px-10 mt-14">
-        <h3 className="text-3xl font-semibold mb-5">Popular Movies</h3>
+      <section className="px-4 md:px-10 mt-8 md:mt-14 pb-10">
+        <h3 className="text-2xl md:text-3xl font-semibold mb-4 md:mb-5">Popular Movies</h3>
 
         {movies.length === 0 ? (
-          <p className="text-gray-400 text-lg">Loading movies...</p>
+          <p className="text-gray-400 text-base md:text-lg">Loading movies...</p>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
             {movies.map((movie: any) => (
               <Link
                 key={movie.id}
