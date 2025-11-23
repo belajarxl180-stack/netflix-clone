@@ -38,21 +38,21 @@ export default function SearchPage() {
     <main className="bg-black text-white min-h-screen">
       <Navbar />
 
-      <div className="px-10 py-10">
+      <div className="px-4 md:px-10 py-6 md:py-10">
         {/* Search Form */}
-        <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-12">
-          <div className="flex gap-3">
+        <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-8 md:mb-12">
+          <div className="flex flex-col md:flex-row gap-3">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search for movies..."
-              className="flex-1 px-6 py-4 rounded-lg bg-gray-900 text-white text-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+              className="flex-1 px-4 md:px-6 py-3 md:py-4 rounded-lg bg-gray-900 text-white text-base md:text-lg focus:outline-none focus:ring-2 focus:ring-red-600"
             />
             <button
               type="submit"
               disabled={loading}
-              className="px-8 py-4 bg-red-600 rounded-lg font-semibold hover:bg-red-700 transition disabled:opacity-50"
+              className="px-6 md:px-8 py-3 md:py-4 bg-red-600 rounded-lg font-semibold hover:bg-red-700 transition disabled:opacity-50 whitespace-nowrap"
             >
               {loading ? "Searching..." : "Search"}
             </button>
@@ -61,13 +61,13 @@ export default function SearchPage() {
 
         {/* Results */}
         {loading ? (
-          <p className="text-center text-gray-400 text-xl">Searching...</p>
+          <p className="text-center text-gray-400 text-base md:text-xl">Searching...</p>
         ) : movies.length > 0 ? (
           <>
-            <h2 className="text-2xl font-semibold mb-6">
+            <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">
               Found {movies.length} results for &quot;{query}&quot;
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
               {movies.map((movie: any) => (
                 <Link
                   key={movie.id}
@@ -96,11 +96,11 @@ export default function SearchPage() {
             </div>
           </>
         ) : query ? (
-          <p className="text-center text-gray-400 text-xl">
+          <p className="text-center text-gray-400 text-base md:text-xl">
             No results found for &quot;{query}&quot;
           </p>
         ) : (
-          <p className="text-center text-gray-400 text-xl">
+          <p className="text-center text-gray-400 text-base md:text-xl">
             Enter a movie title to search
           </p>
         )}
