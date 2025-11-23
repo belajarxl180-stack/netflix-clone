@@ -7,6 +7,9 @@ export async function getPopularMovies() {
 
     const res = await fetch(url, {
       next: { revalidate: 3600 },
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
     });
 
     if (!res.ok) {
@@ -27,6 +30,9 @@ export async function getMovieDetail(movieId: string) {
 
     const res = await fetch(url, {
       next: { revalidate: 3600 },
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
     });
 
     if (!res.ok) {
@@ -47,6 +53,9 @@ export async function searchMovies(query: string) {
 
     const res = await fetch(url, {
       cache: 'no-store',
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
     });
 
     if (!res.ok) {
@@ -67,6 +76,9 @@ export async function getGenres() {
 
     const res = await fetch(url, {
       next: { revalidate: 86400 }, // Cache for 24 hours
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
     });
 
     if (!res.ok) {
@@ -87,6 +99,9 @@ export async function getMoviesByGenre(genreId: string) {
 
     const res = await fetch(url, {
       next: { revalidate: 3600 },
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
     });
 
     if (!res.ok) {
@@ -107,6 +122,9 @@ export async function getMovieVideos(movieId: string) {
 
     const res = await fetch(url, {
       next: { revalidate: 86400 },
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
     });
 
     if (!res.ok) {
