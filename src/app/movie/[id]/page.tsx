@@ -3,7 +3,6 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import MobileMovieDetail from "@/components/MobileMovieDetail";
-import ShareButton from "@/components/ShareButton";
 
 export default async function MovieDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -146,10 +145,7 @@ export default async function MovieDetail({ params }: { params: Promise<{ id: st
           {/* Large Trailer Section (16:9) */}
           {trailer && (
             <div className="mt-16">
-              <div className="flex items-center justify-between mb-6 border-b border-gray-700 pb-3">
-                <h2 className="text-3xl font-bold">Official Trailer</h2>
-                <ShareButton movieId={movie.id} movieTitle={movie.title} />
-              </div>
+              <h2 className="text-3xl font-bold mb-6 border-b border-gray-700 pb-3">Official Trailer</h2>
               <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                 <iframe
                   className="absolute top-0 left-0 w-full h-full rounded-xl"
