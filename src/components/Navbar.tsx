@@ -15,9 +15,6 @@ export default function Navbar() {
         <Link href="/" className="hover:text-red-500 transition-colors duration-200">
           Home
         </Link>
-        <Link href="/search" className="hover:text-red-500 transition-colors duration-200">
-          Movies
-        </Link>
         <Link href="/genres" className="hover:text-red-500 transition-colors duration-200">
           Genres
         </Link>
