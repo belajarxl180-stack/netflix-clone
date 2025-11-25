@@ -149,7 +149,7 @@ export default async function MovieDetail({ params }: { params: Promise<{ id: st
               <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                 <iframe
                   className="absolute top-0 left-0 w-full h-full rounded-xl"
-                  src={`https://www.youtube.com/embed/${trailer.key}?rel=0`}
+                  src={`https://www.youtube.com/embed/${trailer.key}?rel=0&modestbranding=1&showinfo=0`}
                   title={movie.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
