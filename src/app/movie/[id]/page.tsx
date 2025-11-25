@@ -1,8 +1,7 @@
-import { getMovieDetail } from "@/lib/tmdb";
+import { getMovieDetail, getMovieVideos } from "@/lib/tmdb";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import TrailerPlayer from "@/components/TrailerPlayer";
+import Navbar from "@/components/Navbar";
 
 export default async function MovieDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
