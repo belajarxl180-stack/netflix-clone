@@ -139,50 +139,108 @@ export async function getMovieVideos(movieId: string) {
   }
 }
 
-// YouTube fallback menggunakan alternative method
+// YouTube API Key
+const YOUTUBE_API_KEY = "AIzaSyBZL7dc2iZrjcbcj_XwIXfqcFqpnyz0yLU";
+
+// Studio resmi untuk filter prioritas
+const OFFICIAL_STUDIOS = [
+  "Warner Bros",
+  "Universal",
+  "Paramount",
+  "Sony Pictures",
+  "Marvel",
+  "DC",
+  "Disney",
+  "20th Century Studios",
+  "Lionsgate",
+  "Netflix",
+  "Amazon",
+  "Apple TV",
+];
+
+// Filter video agar hanya ambil trailer RESMI
+function filterOfficialTrailers(videos: any[]) {
+  return videos.filter((v) => {
+    const title = v.snippet.title.toLowerCase();
+    const channel = v.snippet.channelTitle.toLowerCase();
+
+    const isTrailer =
+      title.includes("official trailer") ||
+      title.includes("trailer") ||
+      title.includes("teaser");
+
+    const isOfficial = OFFICIAL_STUDIOS.some((studio) =>
+      channel.includes(studio.toLowerCase())
+    );
+
+    return isTrailer || isOfficial;
+  });
+}
+
+// Cari di YouTube dengan filter "Official Trailer"
+async function youtubeSearch(query: string): Promise<any[]> {
+  try {
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=8&type=video&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}`;
+    
+    const res = await fetch(url, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      console.log(`⚠️ YouTube API failed: ${res.status}`);
+      return [];
+    }
+
+    const data = await res.json();
+    return data.items || [];
+  } catch (error) {
+    console.error("YouTube search error:", error);
+    return [];
+  }
+}
+
+// Smart YouTube Trailer Search dengan multiple strategies
 async function searchYouTubeTrailer(movieTitle: string, year?: string): Promise<string | null> {
   try {
-    // Method 1: Coba beberapa variasi search query
-    const queries = [
-      `${movieTitle} ${year || ''} official trailer`,
-      `${movieTitle} ${year || ''} trailer`,
-      `${movieTitle} movie trailer`,
-    ];
-
-    // Gunakan approach sederhana: generate kemungkinan video ID
-    // Berdasarkan pattern umum YouTube video ID
-    const searchQuery = queries[0].trim();
+    console.log(`🔍 YouTube search for: "${movieTitle}" (${year || 'N/A'})`);
     
-    // Alternative: Gunakan Invidious API (YouTube proxy tanpa API key)
-    const invidiousInstances = [
-      'https://invidious.io.lol',
-      'https://iv.ggtyler.dev',
-      'https://invidious.private.coffee',
-    ];
+    // Strategy 1: Exact Match - "[Title] Official Trailer"
+    let videos = await youtubeSearch(`${movieTitle} Official Trailer`);
+    let filtered = filterOfficialTrailers(videos);
+    
+    if (filtered.length > 0) {
+      console.log("✅ Found official trailer (exact match):", filtered[0].id.videoId);
+      return filtered[0].id.videoId;
+    }
 
-    for (const instance of invidiousInstances) {
-      try {
-        const url = `${instance}/api/v1/search?q=${encodeURIComponent(searchQuery)}&type=video`;
-        
-        const res = await fetch(url, {
-          cache: 'no-store',
-          signal: AbortSignal.timeout(5000), // 5 second timeout
-        });
+    // Strategy 2: Broad Match - "[Title] trailer"
+    videos = await youtubeSearch(`${movieTitle} trailer`);
+    filtered = filterOfficialTrailers(videos);
+    
+    if (filtered.length > 0) {
+      console.log("✅ Found official trailer (broad match):", filtered[0].id.videoId);
+      return filtered[0].id.videoId;
+    }
 
-        if (!res.ok) continue;
-
-        const data = await res.json();
-        console.log(`YouTube Search via ${instance}:`, data.length > 0 ? 'Found' : 'Not found');
-        
-        if (data && data.length > 0 && data[0].videoId) {
-          return data[0].videoId;
-        }
-      } catch (err) {
-        console.log(`Failed with ${instance}, trying next...`);
-        continue;
+    // Strategy 3: With Year - "[Title] [Year] trailer"
+    if (year) {
+      videos = await youtubeSearch(`${movieTitle} ${year} trailer`);
+      filtered = filterOfficialTrailers(videos);
+      
+      if (filtered.length > 0) {
+        console.log("✅ Found trailer with year:", filtered[0].id.videoId);
+        return filtered[0].id.videoId;
       }
     }
-    
+
+    // Strategy 4: Catch-all (ambil yang paling relevan)
+    if (videos.length > 0) {
+      console.log("⚠️ Using best match (not verified official):", videos[0].id.videoId);
+      return videos[0].id.videoId;
+    }
+
+    console.log("❌ No trailer found anywhere");
     return null;
   } catch (error) {
     console.error("YouTube search error:", error);
