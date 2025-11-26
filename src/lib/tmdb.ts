@@ -148,15 +148,17 @@ async function searchYouTubeTrailer(movieTitle: string, year?: string): Promise<
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(searchQuery)}&type=video&key=${YOUTUBE_API_KEY}`;
     
     const res = await fetch(url, {
-      next: { revalidate: 86400 },
+      cache: 'no-store', // Force fresh data untuk testing
     });
 
     if (!res.ok) {
-      console.error("YouTube API Error:", res.status);
+      const errorText = await res.text();
+      console.error("YouTube API Error:", res.status, errorText);
       return null;
     }
 
     const data = await res.json();
+    console.log("YouTube Search Result:", data);
     
     if (data.items && data.items.length > 0) {
       return data.items[0].id.videoId;
@@ -172,27 +174,31 @@ async function searchYouTubeTrailer(movieTitle: string, year?: string): Promise<
 // Fungsi utama: coba TMDB dulu, fallback ke YouTube
 export async function getTrailerVideoId(movieId: string, movieTitle: string, releaseYear?: string): Promise<string | null> {
   try {
+    console.log(`🔍 Searching trailer for: ${movieTitle} (${releaseYear || 'N/A'})`);
+    
     // 1. Coba ambil dari TMDB
     const tmdbVideos = await getMovieVideos(movieId);
+    console.log(`📺 TMDB videos found:`, tmdbVideos?.results?.length || 0);
+    
     const tmdbTrailer = tmdbVideos?.results?.find(
       (video: any) => video.type === "Trailer" && video.site === "YouTube"
     );
 
     if (tmdbTrailer?.key) {
-      console.log("✅ Trailer found in TMDB");
+      console.log("✅ Trailer found in TMDB:", tmdbTrailer.key);
       return tmdbTrailer.key;
     }
 
     // 2. Fallback ke YouTube API
-    console.log("⚠️ TMDB trailer not found, searching YouTube...");
+    console.log("⚠️ TMDB trailer not found, searching YouTube API...");
     const youtubeVideoId = await searchYouTubeTrailer(movieTitle, releaseYear);
     
     if (youtubeVideoId) {
-      console.log("✅ Trailer found in YouTube");
+      console.log("✅ Trailer found in YouTube:", youtubeVideoId);
       return youtubeVideoId;
     }
 
-    console.log("❌ No trailer found");
+    console.log("❌ No trailer found anywhere");
     return null;
   } catch (error) {
     console.error("Error getting trailer:", error);
