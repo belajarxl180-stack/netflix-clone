@@ -1,5 +1,6 @@
 import { getMovieDetail, getTrailerVideoId, getMovieCredits, getSimilarMovies } from "@/lib/tmdb";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import MobileMovieDetail from "@/components/MobileMovieDetail";
@@ -164,6 +165,80 @@ export default async function MovieDetail({ params }: { params: Promise<{ id: st
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
+              </div>
+            </div>
+          )}
+
+          {/* Cast & Crew Section */}
+          {credits.cast && credits.cast.length > 0 && (
+            <div className="mt-16">
+              <h2 className="text-3xl font-bold mb-6 border-b border-gray-700 pb-3">Cast & Crew</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                {credits.cast.slice(0, 10).map((person: any) => (
+                  <div key={person.id} className="group">
+                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-800 mb-3">
+                      {person.profile_path ? (
+                        <Image
+                          src={`${imageBaseUrl}${person.profile_path}`}
+                          alt={person.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <svg className="w-12 h-12 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <h4 className="font-semibold text-white group-hover:text-red-500 transition-colors">
+                      {person.name}
+                    </h4>
+                    <p className="text-sm text-gray-400 mt-1 line-clamp-2">{person.character}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Similar Movies Section */}
+          {similarMovies.results && similarMovies.results.length > 0 && (
+            <div className="mt-16">
+              <h2 className="text-3xl font-bold mb-6 border-b border-gray-700 pb-3">Similar Movies</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                {similarMovies.results.slice(0, 10).map((similarMovie: any) => (
+                  <Link key={similarMovie.id} href={`/movie/${similarMovie.id}`} className="group">
+                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-800 mb-3">
+                      {similarMovie.poster_path ? (
+                        <Image
+                          src={`${imageBaseUrl}${similarMovie.poster_path}`}
+                          alt={similarMovie.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <span className="text-gray-600 text-sm text-center px-4">No Image</span>
+                        </div>
+                      )}
+                      
+                      {/* Rating Badge */}
+                      {similarMovie.vote_average > 0 && (
+                        <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-sm px-2 py-1 rounded-md">
+                          <span className="text-yellow-400 text-xs font-bold">⭐ {similarMovie.vote_average.toFixed(1)}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <h4 className="font-semibold text-white group-hover:text-red-500 transition-colors line-clamp-2">
+                      {similarMovie.title}
+                    </h4>
+                    <p className="text-sm text-gray-400 mt-1">
+                      {similarMovie.release_date?.split('-')[0] || 'N/A'}
+                    </p>
+                  </Link>
+                ))}
               </div>
             </div>
           )}
