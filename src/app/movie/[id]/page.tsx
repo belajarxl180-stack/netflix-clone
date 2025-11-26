@@ -1,4 +1,4 @@
-import { getMovieDetail, getMovieVideos } from "@/lib/tmdb";
+import { getMovieDetail, getTrailerVideoId } from "@/lib/tmdb";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -7,15 +7,16 @@ import MobileMovieDetail from "@/components/MobileMovieDetail";
 export default async function MovieDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const movie = await getMovieDetail(id);
-  const videosData = await getMovieVideos(id);
 
   if (!movie) {
     notFound();
   }
 
-  const trailer = videosData?.results?.find(
-    (video: any) => video.type === "Trailer" && video.site === "YouTube"
-  );
+  // Get trailer with fallback to YouTube
+  const releaseYear = movie.release_date?.split('-')[0];
+  const trailerVideoId = await getTrailerVideoId(id, movie.title, releaseYear);
+  
+  const trailer = trailerVideoId ? { key: trailerVideoId } : null;
 
   const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
   const backdropUrl = movie.backdrop_path 
