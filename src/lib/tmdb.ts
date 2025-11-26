@@ -139,10 +139,12 @@ export async function getMovieVideos(movieId: string) {
   }
 }
 
-// YouTube API Key
+// ========================================================
+// YOUTUBE API - SMART TRAILER SEARCH WITH OFFICIAL FILTER
+// ========================================================
 const YOUTUBE_API_KEY = "AIzaSyBZL7dc2iZrjcbcj_XwIXfqcFqpnyz0yLU";
 
-// Studio resmi untuk filter prioritas
+// Official studios for priority filtering
 const OFFICIAL_STUDIOS = [
   "Warner Bros",
   "Universal",
@@ -154,30 +156,11 @@ const OFFICIAL_STUDIOS = [
   "20th Century Studios",
   "Lionsgate",
   "Netflix",
-  "Amazon",
+  "Amazon Studios",
   "Apple TV",
 ];
 
-// Filter video agar hanya ambil trailer RESMI
-function filterOfficialTrailers(videos: any[]) {
-  return videos.filter((v) => {
-    const title = v.snippet.title.toLowerCase();
-    const channel = v.snippet.channelTitle.toLowerCase();
-
-    const isTrailer =
-      title.includes("official trailer") ||
-      title.includes("trailer") ||
-      title.includes("teaser");
-
-    const isOfficial = OFFICIAL_STUDIOS.some((studio) =>
-      channel.includes(studio.toLowerCase())
-    );
-
-    return isTrailer || isOfficial;
-  });
-}
-
-// Cari di YouTube dengan filter "Official Trailer"
+// YouTube Search Function
 async function youtubeSearch(query: string): Promise<any[]> {
   try {
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=8&type=video&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}`;
@@ -200,50 +183,61 @@ async function youtubeSearch(query: string): Promise<any[]> {
   }
 }
 
-// Smart YouTube Trailer Search dengan multiple strategies
+// Filter untuk ambil hanya trailer RESMI
+function filterOfficialTrailers(videos: any[]): any[] {
+  return videos.filter((v) => {
+    const title = v.snippet.title.toLowerCase();
+    const channel = v.snippet.channelTitle.toLowerCase();
+
+    const isTrailer =
+      title.includes("official trailer") ||
+      title.includes("trailer") ||
+      title.includes("teaser");
+
+    const isOfficial = OFFICIAL_STUDIOS.some((studio) =>
+      channel.includes(studio.toLowerCase())
+    );
+
+    return isTrailer || isOfficial;
+  });
+}
+
+// Smart YouTube Trailer Search
 async function searchYouTubeTrailer(movieTitle: string, year?: string): Promise<string | null> {
   try {
-    console.log(`🔍 YouTube search for: "${movieTitle}" (${year || 'N/A'})`);
-    
-    // Strategy 1: Exact Match - "[Title] Official Trailer"
-    let videos = await youtubeSearch(`${movieTitle} Official Trailer`);
+    console.log(`🔍 YouTube search for: "${movieTitle} (${year || 'N/A'})"`);
+
+    // Step 1: Exact Match - "Movie Title Official Trailer"
+    let videos = await youtubeSearch(`${movieTitle} ${year || ''} Official Trailer`.trim());
     let filtered = filterOfficialTrailers(videos);
     
     if (filtered.length > 0) {
-      console.log("✅ Found official trailer (exact match):", filtered[0].id.videoId);
-      return filtered[0].id.videoId;
+      const videoId = filtered[0].id.videoId;
+      console.log("✅ Found via exact match (Official Trailer):", videoId);
+      return videoId;
     }
 
-    // Strategy 2: Broad Match - "[Title] trailer"
-    videos = await youtubeSearch(`${movieTitle} trailer`);
+    // Step 2: Broad Match - "Movie Title Trailer"
+    videos = await youtubeSearch(`${movieTitle} ${year || ''} trailer`.trim());
     filtered = filterOfficialTrailers(videos);
     
     if (filtered.length > 0) {
-      console.log("✅ Found official trailer (broad match):", filtered[0].id.videoId);
-      return filtered[0].id.videoId;
+      const videoId = filtered[0].id.videoId;
+      console.log("✅ Found via broad match (Trailer):", videoId);
+      return videoId;
     }
 
-    // Strategy 3: With Year - "[Title] [Year] trailer"
-    if (year) {
-      videos = await youtubeSearch(`${movieTitle} ${year} trailer`);
-      filtered = filterOfficialTrailers(videos);
-      
-      if (filtered.length > 0) {
-        console.log("✅ Found trailer with year:", filtered[0].id.videoId);
-        return filtered[0].id.videoId;
-      }
-    }
-
-    // Strategy 4: Catch-all (ambil yang paling relevan)
+    // Step 3: Fallback - ambil video pertama yang paling relevan
     if (videos.length > 0) {
-      console.log("⚠️ Using best match (not verified official):", videos[0].id.videoId);
-      return videos[0].id.videoId;
+      const videoId = videos[0].id.videoId;
+      console.log("✅ Found via fallback (first result):", videoId);
+      return videoId;
     }
 
-    console.log("❌ No trailer found anywhere");
+    console.log("❌ No trailer found on YouTube");
     return null;
   } catch (error) {
-    console.error("YouTube search error:", error);
+    console.error("YouTube trailer search error:", error);
     return null;
   }
 }
