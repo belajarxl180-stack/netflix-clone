@@ -139,29 +139,48 @@ export async function getMovieVideos(movieId: string) {
   }
 }
 
-// YouTube API fallback
-const YOUTUBE_API_KEY = "AIzaSyBZL7dc2iZrjcbcj_XwIXfqcFqpnyz0yLU";
-
+// YouTube fallback menggunakan alternative method
 async function searchYouTubeTrailer(movieTitle: string, year?: string): Promise<string | null> {
   try {
-    const searchQuery = `${movieTitle} ${year || ''} official trailer`.trim();
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(searchQuery)}&type=video&key=${YOUTUBE_API_KEY}`;
-    
-    const res = await fetch(url, {
-      cache: 'no-store', // Force fresh data untuk testing
-    });
+    // Method 1: Coba beberapa variasi search query
+    const queries = [
+      `${movieTitle} ${year || ''} official trailer`,
+      `${movieTitle} ${year || ''} trailer`,
+      `${movieTitle} movie trailer`,
+    ];
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error("YouTube API Error:", res.status, errorText);
-      return null;
-    }
-
-    const data = await res.json();
-    console.log("YouTube Search Result:", data);
+    // Gunakan approach sederhana: generate kemungkinan video ID
+    // Berdasarkan pattern umum YouTube video ID
+    const searchQuery = queries[0].trim();
     
-    if (data.items && data.items.length > 0) {
-      return data.items[0].id.videoId;
+    // Alternative: Gunakan Invidious API (YouTube proxy tanpa API key)
+    const invidiousInstances = [
+      'https://invidious.io.lol',
+      'https://iv.ggtyler.dev',
+      'https://invidious.private.coffee',
+    ];
+
+    for (const instance of invidiousInstances) {
+      try {
+        const url = `${instance}/api/v1/search?q=${encodeURIComponent(searchQuery)}&type=video`;
+        
+        const res = await fetch(url, {
+          cache: 'no-store',
+          signal: AbortSignal.timeout(5000), // 5 second timeout
+        });
+
+        if (!res.ok) continue;
+
+        const data = await res.json();
+        console.log(`YouTube Search via ${instance}:`, data.length > 0 ? 'Found' : 'Not found');
+        
+        if (data && data.length > 0 && data[0].videoId) {
+          return data[0].videoId;
+        }
+      } catch (err) {
+        console.log(`Failed with ${instance}, trying next...`);
+        continue;
+      }
     }
     
     return null;
