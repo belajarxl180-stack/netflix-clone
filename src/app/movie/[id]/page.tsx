@@ -4,6 +4,10 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import MobileMovieDetail from "@/components/MobileMovieDetail";
 
+// Force dynamic rendering to always fetch fresh trailer data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function MovieDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const movie = await getMovieDetail(id);
