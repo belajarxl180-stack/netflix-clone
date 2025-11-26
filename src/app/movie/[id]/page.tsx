@@ -14,9 +14,12 @@ export default async function MovieDetail({ params }: { params: Promise<{ id: st
 
   // Get trailer with fallback to YouTube
   const releaseYear = movie.release_date?.split('-')[0];
+  console.log(`🎬 Starting trailer search for: ${movie.title} (${releaseYear})`);
   const trailerVideoId = await getTrailerVideoId(id, movie.title, releaseYear);
+  console.log(`🎬 Trailer result:`, trailerVideoId);
   
   const trailer = trailerVideoId ? { key: trailerVideoId } : null;
+  console.log(`🎬 Final trailer object:`, trailer);
 
   const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
   const backdropUrl = movie.backdrop_path 
