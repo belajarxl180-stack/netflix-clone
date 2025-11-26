@@ -160,10 +160,11 @@ const OFFICIAL_STUDIOS = [
   "Apple TV",
 ];
 
-// YouTube Search Function
+// YouTube Search Function with embeddable filter
 async function youtubeSearch(query: string): Promise<any[]> {
   try {
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=8&type=video&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}`;
+    // Add videoEmbeddable=true to ensure video can be embedded and not blocked in certain regions
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=8&type=video&videoEmbeddable=true&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}`;
     
     const res = await fetch(url, {
       cache: 'no-store',
@@ -202,39 +203,40 @@ function filterOfficialTrailers(videos: any[]): any[] {
   });
 }
 
-// Smart YouTube Trailer Search
+// Smart YouTube Trailer Search with multiple query strategies
 async function searchYouTubeTrailer(movieTitle: string, year?: string): Promise<string | null> {
   try {
     console.log(`🔍 YouTube search for: "${movieTitle} (${year || 'N/A'})"`);
 
-    // Step 1: Exact Match - "Movie Title Official Trailer"
-    let videos = await youtubeSearch(`${movieTitle} ${year || ''} Official Trailer`.trim());
-    let filtered = filterOfficialTrailers(videos);
-    
-    if (filtered.length > 0) {
-      const videoId = filtered[0].id.videoId;
-      console.log("✅ Found via exact match (Official Trailer):", videoId);
-      return videoId;
+    // Multiple query variations for better results
+    const queries = [
+      `${movieTitle} ${year || ''} official trailer`,
+      `${movieTitle} ${year || ''} trailer`,
+      `${movieTitle} ${year || ''} teaser trailer`,
+      `${movieTitle} official trailer`,
+    ];
+
+    // Try each query until we find an embeddable video
+    for (const query of queries) {
+      const videos = await youtubeSearch(query.trim());
+      
+      // First try: Filter for official trailers
+      const filtered = filterOfficialTrailers(videos);
+      if (filtered.length > 0) {
+        const videoId = filtered[0].id.videoId;
+        console.log(`✅ Found embeddable official trailer via "${query}":`, videoId);
+        return videoId;
+      }
+
+      // Second try: Use any video found (already filtered by videoEmbeddable=true)
+      if (videos.length > 0) {
+        const videoId = videos[0].id.videoId;
+        console.log(`✅ Found embeddable trailer via "${query}":`, videoId);
+        return videoId;
+      }
     }
 
-    // Step 2: Broad Match - "Movie Title Trailer"
-    videos = await youtubeSearch(`${movieTitle} ${year || ''} trailer`.trim());
-    filtered = filterOfficialTrailers(videos);
-    
-    if (filtered.length > 0) {
-      const videoId = filtered[0].id.videoId;
-      console.log("✅ Found via broad match (Trailer):", videoId);
-      return videoId;
-    }
-
-    // Step 3: Fallback - ambil video pertama yang paling relevan
-    if (videos.length > 0) {
-      const videoId = videos[0].id.videoId;
-      console.log("✅ Found via fallback (first result):", videoId);
-      return videoId;
-    }
-
-    console.log("❌ No trailer found on YouTube");
+    console.log("❌ No embeddable trailer found on YouTube");
     return null;
   } catch (error) {
     console.error("YouTube trailer search error:", error);
