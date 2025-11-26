@@ -1,4 +1,4 @@
-import { getMovieDetail, getTrailerVideoId } from "@/lib/tmdb";
+import { getMovieDetail, getTrailerVideoId, getMovieCredits, getSimilarMovies } from "@/lib/tmdb";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -18,12 +18,14 @@ export default async function MovieDetail({ params }: { params: Promise<{ id: st
 
   // Get trailer with fallback to YouTube
   const releaseYear = movie.release_date?.split('-')[0];
-  console.log(`🎬 Starting trailer search for: ${movie.title} (${releaseYear})`);
   const trailerVideoId = await getTrailerVideoId(id, movie.title, releaseYear);
-  console.log(`🎬 Trailer result:`, trailerVideoId);
-  
   const trailer = trailerVideoId ? { key: trailerVideoId } : null;
-  console.log(`🎬 Final trailer object:`, trailer);
+
+  // Get cast & crew
+  const credits = await getMovieCredits(id);
+  
+  // Get similar movies
+  const similarMovies = await getSimilarMovies(id);
 
   const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
   const backdropUrl = movie.backdrop_path 
@@ -33,7 +35,7 @@ export default async function MovieDetail({ params }: { params: Promise<{ id: st
   return (
     <>
       {/* MOBILE VERSION */}
-      <MobileMovieDetail movie={movie} trailer={trailer} />
+      <MobileMovieDetail movie={movie} trailer={trailer} cast={credits.cast} similarMovies={similarMovies.results} />
 
       {/* DESKTOP VERSION - CINEMATIC LAYOUT */}
       <main className="hidden md:block bg-black text-white min-h-screen">

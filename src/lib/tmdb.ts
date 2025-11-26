@@ -278,3 +278,51 @@ export async function getTrailerVideoId(movieId: string, movieTitle: string, rel
     return null;
   }
 }
+
+// Get Movie Credits (Cast & Crew)
+export async function getMovieCredits(movieId: string) {
+  try {
+    const url = `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`;
+
+    const res = await fetch(url, {
+      next: { revalidate: 86400 }, // Cache for 24 hours
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`TMDB API Error: ${res.status} - ${errorText}`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("TMDB credits fetch error:", error);
+    return { cast: [], crew: [] };
+  }
+}
+
+// Get Similar Movies
+export async function getSimilarMovies(movieId: string) {
+  try {
+    const url = `${BASE_URL}/movie/${movieId}/similar?api_key=${API_KEY}&language=en-US&page=1`;
+
+    const res = await fetch(url, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`TMDB API Error: ${res.status} - ${errorText}`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("TMDB similar movies fetch error:", error);
+    return { results: [] };
+  }
+}

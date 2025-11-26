@@ -7,9 +7,11 @@ import Link from 'next/link';
 interface MobileMovieDetailProps {
   movie: any;
   trailer: any;
+  cast: any[];
+  similarMovies: any[];
 }
 
-export default function MobileMovieDetail({ movie, trailer }: MobileMovieDetailProps) {
+export default function MobileMovieDetail({ movie, trailer, cast, similarMovies }: MobileMovieDetailProps) {
   const [activeTab, setActiveTab] = useState('detail');
   
   const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
@@ -173,8 +175,40 @@ export default function MobileMovieDetail({ movie, trailer }: MobileMovieDetailP
         {activeTab === 'cast' && (
           <div>
             <h3 className="text-2xl font-bold mb-4">Cast & Crew</h3>
-            <p className="text-gray-400 text-sm mb-4">Coming soon - Cast information will be available here</p>
-            {/* Horizontal scroll cast list - to be implemented with TMDB credits API */}
+            {cast && cast.length > 0 ? (
+              <div className="space-y-4">
+                {cast.slice(0, 10).map((person: any) => (
+                  <div key={person.id} className="flex gap-4 items-start">
+                    {/* Profile Image */}
+                    <div className="flex-shrink-0">
+                      {person.profile_path ? (
+                        <Image
+                          src={`${imageBaseUrl}${person.profile_path}`}
+                          alt={person.name}
+                          width={60}
+                          height={90}
+                          className="rounded-lg"
+                        />
+                      ) : (
+                        <div className="w-[60px] h-[90px] bg-gray-800 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Info */}
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white">{person.name}</h4>
+                      <p className="text-sm text-gray-400">{person.character}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm">No cast information available</p>
+            )}
           </div>
         )}
 
@@ -202,8 +236,44 @@ export default function MobileMovieDetail({ movie, trailer }: MobileMovieDetailP
         {activeTab === 'similar' && (
           <div>
             <h3 className="text-2xl font-bold mb-4">Similar Movies</h3>
-            <p className="text-gray-400 text-sm mb-4">Coming soon - Similar movie recommendations will appear here</p>
-            {/* Horizontal scroll similar movies - to be implemented */}
+            {similarMovies && similarMovies.length > 0 ? (
+              <div className="grid grid-cols-2 gap-4">
+                {similarMovies.slice(0, 10).map((similarMovie: any) => (
+                  <Link key={similarMovie.id} href={`/movie/${similarMovie.id}`} className="group">
+                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-800 mb-2">
+                      {similarMovie.poster_path ? (
+                        <Image
+                          src={`${imageBaseUrl}${similarMovie.poster_path}`}
+                          alt={similarMovie.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <span className="text-gray-600 text-xs text-center px-2">No Image</span>
+                        </div>
+                      )}
+                      
+                      {/* Rating Badge */}
+                      {similarMovie.vote_average > 0 && (
+                        <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-sm px-2 py-1 rounded-md">
+                          <span className="text-yellow-400 text-xs font-bold">⭐ {similarMovie.vote_average.toFixed(1)}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <h4 className="font-medium text-sm line-clamp-2 group-hover:text-red-500 transition-colors">
+                      {similarMovie.title}
+                    </h4>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {similarMovie.release_date?.split('-')[0] || 'N/A'}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm">No similar movies found</p>
+            )}
           </div>
         )}
       </div>
