@@ -25,7 +25,7 @@ export default function MobileMovieDetail({ movie, trailer, cast, similarMovies 
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </Link>
-        <h1 className="text-xl font-bold text-red-600">NETFLIX</h1>
+        <h1 className="text-xl font-bold text-red-600" style={{ fontFamily: 'Netflix Sans, Arial, Helvetica, sans-serif' }}>Mbah Mur Trailer Film</h1>
       </header>
 
       {/* TOP SECTION - Poster + Info */}
@@ -288,7 +288,7 @@ export default function MobileMovieDetail({ movie, trailer, cast, similarMovies 
             <span className="mx-2">•</span>
             <a href="#" className="hover:text-red-500">Privacy</a>
           </p>
-          <p className="text-xs">&copy; 2025 Netflix Clone</p>
+          <p className="text-xs">&copy; 2025 Mbah Mur Trailer Film</p>
         </div>
       </footer>
     </div>

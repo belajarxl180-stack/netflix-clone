@@ -5,8 +5,8 @@ export default function Navbar() {
     <header className="flex items-center justify-between px-4 md:px-16 py-4 md:py-5 bg-black/95 backdrop-blur-md sticky top-0 z-50 border-b border-gray-800/50">
       {/* Logo */}
       <Link href="/">
-        <h1 className="text-2xl md:text-4xl font-black text-red-600 cursor-pointer tracking-tight">
-          NETFLIX
+        <h1 className="text-2xl md:text-4xl font-black text-red-600 cursor-pointer tracking-tight" style={{ fontFamily: 'Netflix Sans, Arial, Helvetica, sans-serif' }}>
+          Mbah Mur Trailer Film
         </h1>
       </Link>
 

@@ -4,30 +4,30 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "Netflix Clone - Watch Unlimited Movies & TV Shows",
-  description: "Discover and explore thousands of popular movies and TV shows. Browse by genre, search for your favorites, and watch trailers. Free Netflix-style streaming platform.",
-  keywords: ["netflix", "movies", "streaming", "tv shows", "watch movies", "film online", "nonton film"],
-  authors: [{ name: "Netflix Clone" }],
+  title: "Mbah Mur Trailer Film - Nonton Trailer Film Terbaru & Terlengkap",
+  description: "Jelajahi ribuan trailer film terbaru dan terlengkap. Cari berdasarkan genre, temukan film favorit, dan tonton trailer dengan gaya khas Netflix.",
+  keywords: ["trailer film", "mbah mur", "nonton trailer", "film terbaru", "netflix font", "nonton film"],
+  authors: [{ name: "Mbah Mur Trailer Film" }],
   openGraph: {
-    title: "Netflix Clone - Watch Unlimited Movies",
-    description: "Discover thousands of popular movies and TV shows. Browse by genre and watch trailers.",
+    title: "Mbah Mur Trailer Film - Nonton Trailer Film Terbaru",
+    description: "Jelajahi ribuan trailer film terbaru dan terlengkap. Cari berdasarkan genre dan tonton trailer dengan font khas Netflix.",
     url: "https://netflix-clone-khaki-two-35.vercel.app",
-    siteName: "Netflix Clone",
+    siteName: "Mbah Mur Trailer Film",
     images: [
       {
         url: "https://netflix-clone-khaki-two-35.vercel.app/banner.jpg",
         width: 1200,
         height: 630,
-        alt: "Netflix Clone Banner",
+        alt: "Mbah Mur Trailer Film Banner",
       },
     ],
-    locale: "en_US",
+    locale: "id_ID",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Netflix Clone - Watch Unlimited Movies",
-    description: "Discover thousands of popular movies and TV shows",
+    title: "Mbah Mur Trailer Film - Nonton Trailer Film Terbaru",
+    description: "Jelajahi ribuan trailer film terbaru dan terlengkap.",
     images: ["https://netflix-clone-khaki-two-35.vercel.app/banner.jpg"],
   },
   viewport: "width=device-width, initial-scale=1",

@@ -248,9 +248,9 @@ export default async function MovieDetail({ params }: { params: Promise<{ id: st
         <footer className="bg-zinc-900 border-t border-gray-800 mt-20 py-12">
           <div className="max-w-[1600px] mx-auto px-12 grid grid-cols-4 gap-12">
             <div>
-              <h3 className="text-xl font-bold text-red-600 mb-4">NETFLIX CLONE</h3>
+              <h3 className="text-xl font-bold text-red-600 mb-4" style={{ fontFamily: 'Netflix Sans, Arial, Helvetica, sans-serif' }}>Mbah Mur Trailer Film</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
-                Your ultimate destination for discovering movies and TV shows. Browse, search, and explore thousands of titles.
+                Platform untuk menjelajahi trailer film terbaru dan terlengkap. Cari, tonton, dan eksplorasi ribuan judul film.
               </p>
             </div>
             <div>
@@ -282,7 +282,7 @@ export default async function MovieDetail({ params }: { params: Promise<{ id: st
           </div>
           <div className="max-w-[1600px] mx-auto px-12 mt-12 pt-8 border-t border-gray-800">
             <p className="text-gray-500 text-sm text-center">
-              © 2024 Netflix Clone. All rights reserved. Movie data provided by TMDB.
+              © 2025 Mbah Mur Trailer Film. All rights reserved. Movie data provided by TMDB.
             </p>
           </div>
         </footer>
