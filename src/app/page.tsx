@@ -17,7 +17,7 @@ export default async function Home() {
 
         <div className="relative z-10">
           <h2 className="text-3xl md:text-5xl font-bold max-w-xl mb-3 md:mb-5 drop-shadow-lg" style={{ fontFamily: 'Netflix Sans, Arial, Helvetica, sans-serif' }}>
-            Mbah Mur Trailer
+            NETFLIX
           </h2>
           <p className="text-base md:text-xl max-w-lg mb-4 md:mb-8 drop-shadow-lg">
             Jelajahi trailer film terbaru dan terlengkap, hanya di sini!

@@ -6,7 +6,7 @@ export default function Navbar() {
       {/* Logo */}
       <Link href="/">
         <h1 className="text-2xl md:text-4xl font-black text-red-600 cursor-pointer tracking-tight" style={{ fontFamily: 'Netflix Sans, Arial, Helvetica, sans-serif' }}>
-          Mbah Mur Trailer
+          NETFLIX
         </h1>
       </Link>
 

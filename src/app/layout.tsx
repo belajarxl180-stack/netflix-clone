@@ -4,21 +4,21 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "Mbah Mur Trailer - Nonton Trailer Film Terbaru & Terlengkap",
+  title: "Netflix - Nonton Trailer Film Terbaru & Terlengkap",
   description: "Jelajahi ribuan trailer film terbaru dan terlengkap. Cari berdasarkan genre, temukan film favorit, dan tonton trailer dengan gaya khas Netflix.",
-  keywords: ["trailer film", "mbah mur", "nonton trailer", "film terbaru", "netflix font", "nonton film"],
-  authors: [{ name: "Mbah Mur Trailer" }],
+  keywords: ["trailer film", "netflix", "nonton trailer", "film terbaru", "netflix font", "nonton film"],
+  authors: [{ name: "Netflix" }],
   openGraph: {
-    title: "Mbah Mur Trailer - Nonton Trailer Film Terbaru",
+    title: "Netflix - Nonton Trailer Film Terbaru",
     description: "Jelajahi ribuan trailer film terbaru dan terlengkap. Cari berdasarkan genre dan tonton trailer dengan font khas Netflix.",
     url: "https://netflix-clone-khaki-two-35.vercel.app",
-    siteName: "Mbah Mur Trailer",
+    siteName: "Netflix",
     images: [
       {
         url: "https://netflix-clone-khaki-two-35.vercel.app/banner.jpg",
         width: 1200,
         height: 630,
-        alt: "Mbah Mur Trailer Banner",
+        alt: "Netflix Banner",
       },
     ],
     locale: "id_ID",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mbah Mur Trailer - Nonton Trailer Film Terbaru",
+    title: "Netflix - Nonton Trailer Film Terbaru",
     description: "Jelajahi ribuan trailer film terbaru dan terlengkap.",
     images: ["https://netflix-clone-khaki-two-35.vercel.app/banner.jpg"],
   },
