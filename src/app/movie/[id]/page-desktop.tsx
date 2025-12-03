@@ -187,7 +187,7 @@ export default async function MovieDetailDesktop({ params }: { params: Promise<{
       {/* Footer Placeholder */}
       <footer className="bg-gray-900 border-t border-gray-800 py-12 mt-20">
         <div className="max-w-7xl mx-auto px-16 text-center text-gray-400">
-          <p>&copy; 2025 Mbah Mur Trailer Film. All rights reserved.</p>
+          <p>&copy; 2025 NeO Film. All rights reserved.</p>
         </div>
       </footer>
     </main>
